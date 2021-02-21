@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MODAS</title>
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <!-- font awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
+  <!-- animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <!-- custom -->
+  <style>
+    .flag{ cursor: pointer; }
+  </style>
+</head>
+<body>
+  <!-- toasts -->
+  <div role="alert" aria-live="assertive" aria-atomic="true" style="position:fixed;top:65px;right:10px;min-height:200px;">
+    <div style="position:absolute;top:0;right:0;" id="toast_container">
+      <!-- toast container -->
+    </div>
+  </div>
+  <!-- navbar -->
+  <nav class="navbar fixed-top navbar-light" style="background-color:#dedede;">
+    <div class="navbar-brand">
+      <i class="fas fa-shield-alt"></i>
+      <span class="d-inline d-md-none">MODAS</span> 
+      <span class="d-none d-md-inline" style="font-variant:small-caps;">Moving Object Detection Alert System</span>
+    </div>
+    <ul class="navbar-nav ml-auto mx-5" id="signIn" style="display:none;">
+      <li class="nav-item">
+          <a class="nav-link" href="#"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto mx-5" id="signOut" style="display:none;">
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+      </li>
+    </ul>
+    <button disabled id="auto-refresh" type="button" class="btn btn-primary" data-val="false">
+      <i class="far fa-square"></i> Auto Refresh
+    </button>
+  </nav>
+  <!-- content -->
+  <div class="container" id="content" style="display:none;margin-top:65px;">
+    <table class="table table-sm table-striped table-shadow">
+      <thead class="bg-success text-white">
+          <tr><th class="text-center">Flag</th><th>Date</th><th>Time</th><th>Location</th></tr>
+      </thead>
+      <tbody>
+          <!-- Event data here -->
+      </tbody>
+    </table>
+    <!-- use AJAX to navigate -->
+    <div class="row mb-3">
+      <div class="col">
+        <button disabled id="first" class="btn btn-outline-secondary" type="button"><i class="fas fa-angle-double-left"></i><span class="d-none d-md-inline"> First</span></button>
+        <button disabled id="prev" class="btn btn-outline-secondary" type="button"><i class="fas fa-angle-left"></i><span class="d-none d-md-inline"> Prev</span></button>
+      </div>
+      <div class="col text-center text-secondary">
+        <span id="start">##</span>-<span id="end">##</span>
+        of
+        <span id="total">##</span>
+      </div>
+      <div id="current" class="d-none" data-val=""></div>
+      <div class="col text-right">
+        <button disabled id="next" class="btn btn-outline-secondary" type="button"><span class="d-none d-md-inline">Next </span><i class="fas fa-angle-right"></i></button>
+        <button disabled id="last" class="btn btn-outline-secondary"><span class="d-none d-md-inline">Last </span><i class="fas fa-angle-double-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal for login -->
+  <div class="modal" tabindex="-1" role="dialog" id="signInModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fas fa-sign-in-alt"></i> Sign In</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Username">
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Password">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery framework -->
+  <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <!-- bootstrap -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf" crossorigin="anonymous"></script>
+  <!-- js-cookie -->
+  <script src="js-cookie.min.js"></script>
+  <!-- custom javascript -->
+  <script src="client.js"></script>
+</body>
+</html>
