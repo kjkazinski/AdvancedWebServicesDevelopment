@@ -23,12 +23,19 @@ namespace Modas.Controllers
             _userManager = userManager;
         }
 
+        //public IActionResult RequestToken([FromBody]UserLogin login)
+
         [HttpPost]
-        public async Task<object>  RequestToken([FromBody]UserLogin login)
+        public async Task<object> RequestToken([FromBody] UserLogin login)
         {
             IActionResult response = Unauthorized();
+            //var user = AppUser.Authenticate(login);
+
+            //if (user != null)
             if (ModelState.IsValid)
             {
+                //var tokenString = BuildToken(user);
+                //response = Ok(new { token = tokenString });
                 AppUser user = await _userManager.FindByEmailAsync(login.Username);
                 if (user != null)
                 {
@@ -47,6 +54,7 @@ namespace Modas.Controllers
                         }
                     }
                 }
+
             }
 
             return response;
@@ -55,8 +63,12 @@ namespace Modas.Controllers
         private string BuildToken(AppUser user)
         {
             var claims = new[] {
+                //new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
+                //new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
                 //new Claim(JwtRegisteredClaimNames.Email, user.Email),
+
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.Id)
+
                 //new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 //new Claim(JwtRegisteredClaimNames.UniqueName, user.Email)
             };
@@ -68,9 +80,10 @@ namespace Modas.Controllers
                 null, // issuer
                 null, // audience
                 claims,
+                //expires: DateTime.Now.AddDays(7),
                 expires: DateTime.Now.AddDays(Int16.Parse(_config["Jwt:ValidFor"])),
                 signingCredentials: creds);
-
+            // returns the json data with key named "token" and the value of the key
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }

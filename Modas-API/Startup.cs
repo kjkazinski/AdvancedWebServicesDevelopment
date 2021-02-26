@@ -44,6 +44,7 @@ namespace Modas
                     });
             });
             services.AddDbContext<EventDbContext>(options => options.UseSqlServer(Configuration["EventDbContext:ConnectionString"]));
+
             // ==== App Identity Db Context ======
             services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["AppIdentityDbContext:ConnectionString"]));
             // ==== Add Identity ======
@@ -62,7 +63,7 @@ namespace Modas
                 };
             });
 
-            // Register JWT authentication schema / configure default JWT options
+            // Register JWT authentication schema - configure default JWT options
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -93,7 +94,7 @@ namespace Modas
             app.UseRouting();
 
             app.UseCors("Open");
-
+            //order here matters
             app.UseAuthentication();
             app.UseAuthorization();
 

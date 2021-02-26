@@ -1,3 +1,6 @@
+// var hostString = "https://localhost:5001/";
+var hostString = "https://https://modas-kkazinski.azurewebsites.net/";
+
 $(function () {
   var toasts = [];
   var refreshInterval;
@@ -29,10 +32,13 @@ $(function () {
 
   function getEvents(page) {
     $.getJSON({
-      url: "https://modas-kkazinski.azurewebsites.net/api/event/pagesize/10/page/" + page,
-      // url: "https://localhost:5001/api/event/pagesize/10/page/" + page,
+      headers: { "Authorization": 'Bearer ' + Cookies.get('token') },
+      //url: "https://modasapi.azurewebsites.net/api/event/pagesize/10/page/" + page,
+      //url: "https://localhost:44301/api/event/pagesize/10/page/" + page,
+      //url: "https://webapp-210214113529.azurewebsites.net/api/event/pagesize/10/page/" + page,
+      //url: "https://awsmodasapi.azurewebsites.net/api/event/pagesize/10/page/" + page,
+      url: hostString + "api/event/pagesize/10/page/" + page,
       success: function (response, textStatus, jqXhr) {
-        //console.log(response);
         showTableBody(response.events);
         showPagingInfo(response.pagingInfo);
         initButtons();
@@ -51,8 +57,11 @@ $(function () {
 
   function refreshEvents() {
     $.getJSON({
-      url: "https://modas-kkazinski.azurewebsites.net/api/event/count",
-      // url: "https://localhost:5001/api/event/count",
+      //url: "https://modasapi.azurewebsites.net/api/event/count",
+      //url: "https://localhost:44301/api/event/count",
+      //url: "https://webapp-210214113529.azurewebsites.net/api/event/count",
+      //url: "https://awsmodasapi.azurewebsites.net/api/event/count",
+      url: hostString + "api/event/count",
       success: function (response, textStatus, jqXhr) {
         if (response != $('#total').html()) {
           // Toast
@@ -75,14 +84,14 @@ $(function () {
       var f = e[i].flag ? "fas" : "far";
       html += "<tr>";
       html += "<td class=\"text-center\">";
-      html += "<i data-id=\"" + e[i].id + "\" data-checked=\"" + e[i].flag + "\" class=\"" + f + " fa-flag fa-lg flag\" />";
+      html += "<i data-id=\"" + e[i].id + "\" data-checked=\"" + e[i].flag + "\" class=\"" + f + " fa-eye fa-lg eye\" />";
       html += "</td>";
       html += "<td>";
       html += "<div class=\"d-none d-md-block\">" + get_long_date(e[i].stamp) + "</div >";
       html += "<div class=\"d-md-none\">" + get_short_date(e[i].stamp) + "</div >";
       html += "</td>";
       html += "<td>" + get_time(e[i].stamp) + "</td>";
-      html += "<td>" + e[i].loc + "</td>";
+      html += "<td>" + e[i].loc + " " +  + e[i].id + "</td>";
       html += "</tr> ";
     }
     $('tbody').html(html);
@@ -129,7 +138,7 @@ $(function () {
       hours = hours < 10 ? "0" + hours : hours + "";
       var minutes = time.split(":")[1];
       return hours + ":" + minutes + am_pm;
-  } 
+  }
 
   function toast(header, text, icon){
     // create unique id for toast using array length
@@ -195,7 +204,7 @@ $(function () {
 
   // delegated event handler needed
   // http://api.jquery.com/on/#direct-and-delegated-events
-  $('tbody').on('click', '.flag', function () {
+  $('tbody').on('click', '.eye', function () {
     var checked;
     if ($(this).data('checked')) {
       $(this).data('checked', false);
@@ -206,10 +215,17 @@ $(function () {
       $(this).removeClass('far').addClass('fas');
       checked = true;
     }
+
+
     // AJAX to update database
     $.ajax({
-      headers: { "Content-Type": "application/json" },
-      url: "https://modas-kkazinski.azurewebsites.net/api/event/" + $(this).data('id'),
+      // headers: { "Content-Type": "application/json" },
+      headers: { "Authorization": 'Bearer ' + Cookies.get('token'), "Content-Type": "application/json" },
+      //url: "https://modasapi.azurewebsites.net/api/event/" + $(this).data('id'),
+      //url: "https://localhost:44301/api/event/" + $(this).data('id'),
+      //url: "https://webapp-210214113529.azurewebsites.net/api/event/" + $(this).data('id'),
+      //url: "https://awsmodasapi.azurewebsites.net/api/event/" + $(this).data('id'),
+      url: hostString + "api/event/" + $(this).data('id'),
       type: 'patch',
       data: JSON.stringify([{ "op": "replace", "path": "Flagged", "value": checked }]),
       success: function () {
@@ -263,7 +279,7 @@ $(function () {
 
   $('#submitButton').on('click', function(e){
     e.preventDefault();
-
+    console.log("line 282 api client");
     // reset any fields marked with errors
     $('.form-control').removeClass('is-invalid');
     // create an empty errors array
@@ -286,7 +302,8 @@ $(function () {
         //url: "https://modasapi.azurewebsites.net/api/token",
         //url: "https://localhost:44301/api/token",
         //url: "https://webapp-210214113529.azurewebsites.net/api/token",
-        url: "https://awsmodasapi.azurewebsites.net/api/token",
+        //url: "https://awsmodasapi.azurewebsites.net/api/token",
+        url: hostString + "api/token",
         type: 'post',
         data: JSON.stringify({ "username": $('#username').val(), "password": $('#password').val() }),
         success: function (data) {
@@ -299,6 +316,8 @@ $(function () {
         error: function (jqXHR, textStatus, errorThrown) {
           // log the error to the console
           console.log("The following error occured: " + jqXHR.status, errorThrown);
+          alert("Incorrect login information.  Please check credentials.");
+
         }
       });
     }
